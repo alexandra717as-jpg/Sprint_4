@@ -47,16 +47,6 @@ class TestBooksCollector:
         collector.add_book_in_favorites('Несуществующая книга')
         assert len(collector.get_list_of_favorites_books()) == 0
 
-    @pytest.mark.parametrize('name, genre', [
-        ['Дракула', 'Ужасы'],
-        ['Шерлок', 'Детективы'],
-        ['Аладдин', 'Мультфильмы']
-    ])
-    def test_set_genre_for_different_books(self, collector, name, genre):
-        collector.add_new_book(name)
-        collector.set_book_genre(name, genre)
-        assert collector.get_book_genre(name) == genre
-
     def test_get_books_genre_returns_dict(self, collector):
         collector.add_new_book('Оно')
         collector.set_book_genre('Оно', 'Ужасы')
@@ -66,3 +56,20 @@ class TestBooksCollector:
         collector.add_new_book('Шерлок')
         collector.set_book_genre('Шерлок', 'Детективы')
         assert collector.get_book_genre('Шерлок') == 'Детективы'
+
+    @pytest.mark.parametrize('name', [
+        'А',  
+        'А' * 40  
+    ])
+    def test_add_new_book_valid_length_added(self, collector, name):
+        collector.add_new_book(name)
+        assert len(collector.get_books_genre()) == 1
+
+    @pytest.mark.parametrize('name', [
+        '',  
+        'А' * 41  
+    ])
+    def test_add_new_book_invalid_length_not_added(self, collector, name):
+        collector.add_new_book(name)
+        assert len(collector.get_books_genre()) == 0
+        
